@@ -1,0 +1,143 @@
+version: 2
+
+models:
+  # STAGING MODEL
+  - name: stg_netflix_titles
+    description: "Cleaned staging model for raw Netflix movies and TV shows"
+
+    columns:
+      - name: show_id
+        description: "Unique Netflix content identifier"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: type
+        description: "Original content type"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Movie", "TV Show"]
+
+      - name: title
+        description: "Title of the movie or TV show"
+        data_tests:
+          - not_null
+
+      - name: release_year
+        description: "Year the content was released"
+        data_tests:
+          - not_null
+
+  # INTERMEDIATE MODEL
+  - name: int_netflix_content
+    description: "Standardized Netflix content with cleaned attributes and derived content type"
+
+    columns:
+      - name: show_id
+        description: "Unique identifier for each Netflix title"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: content_type
+        description: "Standardized classification of movies and TV shows"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Movie", "TV Show"]
+
+      - name: director_cleaned
+        description: "Director name with missing values standardized as Unknown"
+        data_tests:
+          - not_null
+
+      - name: country_cleaned
+        description: "Country information with missing values standardized as Unknown"
+        data_tests:
+          - not_null
+
+  # FACT TABLE
+  - name: fct_content_summary
+    description: "Overall Netflix catalogue KPIs including movies, TV shows, countries and data quality metrics"
+
+    columns:
+      - name: total_titles
+        description: "Total number of Netflix titles"
+
+      - name: total_movies
+        description: "Total number of movies"
+
+      - name: total_tv_shows
+        description: "Total number of TV shows"
+
+      - name: total_countries
+        description: "Distinct country values in the catalogue"
+
+      - name: total_release_years
+        description: "Number of distinct release years"
+
+      - name: missing_director_records
+        description: "Number of records with unknown directors"
+
+      - name: missing_country_records
+        description: "Number of records with unknown countries"
+
+  # CONTENT TYPE DIMENSION
+  - name: dim_content_type
+    description: "Aggregated Netflix catalogue metrics by content type"
+
+    columns:
+      - name: content_type
+        description: "Movie or TV Show classification"
+
+      - name: total_titles
+        description: "Total titles for each content type"
+
+      - name: total_release_years
+        description: "Distinct release years for each content type"
+
+      - name: missing_director_records
+        description: "Number of titles with unknown directors"
+
+      - name: missing_country_records
+        description: "Number of titles with unknown countries"
+
+  # RELEASE YEAR DIMENSION
+  - name: dim_release_year
+    description: "Year-wise Netflix catalogue analysis split by movies and TV shows"
+
+    columns:
+      - name: release_year
+        description: "Year in which the content was released"
+
+      - name: total_titles
+        description: "Total titles released in the year"
+
+      - name: total_movies
+        description: "Number of movies released in the year"
+
+      - name: total_tv_shows
+        description: "Number of TV shows released in the year"
+
+      - name: total_countries
+        description: "Distinct country values associated with the release year"
+
+  # INCREMENTAL MODEL
+  - name: int_incremental_netflix
+    description: "Incremental table demonstrating loading of new Netflix records without rebuilding the complete dataset"
+
+    columns:
+      - name: show_id
+        description: "Unique Netflix title identifier"
+
+      - name: title
+        description: "Netflix movie or TV show title"
+
+      - name: type
+        description: "Content type"
+
+      - name: release_year
+        description: "Original release year"

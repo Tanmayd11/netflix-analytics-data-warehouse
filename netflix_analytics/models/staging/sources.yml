@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: netflix_raw
+    description: "Raw Netflix catalogue data loaded into DuckDB"
+    schema: main
+    tables:
+      - name: raw_netflix_titles
+        description: "Original Netflix movies and TV shows dataset"

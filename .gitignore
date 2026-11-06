@@ -1,0 +1,33 @@
+
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# DuckDB database files
+*.duckdb
+*.duckdb.wal
+
+# dbt generated files
+netflix_analytics/target/
+netflix_analytics/dbt_packages/
+netflix_analytics/logs/
+
+# Logs
+logs/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment variables and secrets
+.env
+
+# Raw dataset - download separately
+data/
